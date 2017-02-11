@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MinTimeDialog</string>
+    <string name="btn_simple_show" >Show</string>
 </resources>
