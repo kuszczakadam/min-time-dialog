@@ -7,8 +7,8 @@ import android.os.Handler;
 /**
  * Progress Dialog with Minimum Showing Time. It assures that dialog will be shown for
  * at least specified amount of time. It also offers silent dismiss, without firing dismiss listener
- *
- *
+ * <p>
+ * <p>
  * Created by Adam Kuszczak on 11/02/2017.
  */
 
@@ -17,6 +17,7 @@ public class MinTimeDialog extends ProgressDialog {
     // === Configuration option ===
     private int mMinShownTimeMs;
     private boolean mSilentDismiss;
+    private boolean mAutoDismissAfterMinShownTime;
 
     // === Internal flags ===
     private Handler mHandler;
@@ -48,6 +49,7 @@ public class MinTimeDialog extends ProgressDialog {
     private void init() {
         mMinShownTimeMs = 0;
         mSilentDismiss = false;
+        mAutoDismissAfterMinShownTime = false;
 
         mHandler = new Handler();
         mDismissAlreadyRequested = false;
@@ -70,6 +72,15 @@ public class MinTimeDialog extends ProgressDialog {
      */
     public void setSilentDismiss(boolean silentDismiss) {
         this.mSilentDismiss = silentDismiss;
+    }
+
+    /**
+     * Option to automatically dismiss dialog when minimum showing time is reached
+     *
+     * @param autoDismissAfterMinShownTime true if dialog should be dismissed automatically after minShownTimeMS
+     */
+    public void setAutoDismissAfterMinShownTime(boolean autoDismissAfterMinShownTime) {
+        this.mAutoDismissAfterMinShownTime = autoDismissAfterMinShownTime;
     }
 
     /**
@@ -116,7 +127,7 @@ public class MinTimeDialog extends ProgressDialog {
         @Override
         public void run() {
             mMinShowingTimeAchieved = true;
-            if (mDismissAlreadyRequested) {
+            if (mDismissAlreadyRequested || mAutoDismissAfterMinShownTime) {
                 dismissForced();
             }
         }

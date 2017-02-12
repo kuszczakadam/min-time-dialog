@@ -38,4 +38,12 @@ public class MainActivity extends AppCompatActivity {
         }, 4000);
 
     }
+
+    private void options(){
+        MinTimeDialog dialog = new MinTimeDialog(this);
+        dialog.setMinShownTimeMs(0);//in millisec
+        dialog.setSilentDismiss(false);
+        dialog.show();
+        dialog.dismissForced();
+    }
 }
