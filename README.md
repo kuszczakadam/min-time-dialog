@@ -28,3 +28,5 @@ The code below shows all available options with default values
   dialog.show();
   dialog.dismissForced();
 ```
+
+`MinTimeDialog` extends `ProgressDialog` so all styling options are available as well
