@@ -49,12 +49,14 @@ public class MinTimeDialog extends ProgressDialog {
 
     @Override
     public void show() {
-        mHandler.postDelayed(minShowingTimeTimeout, mMinShownTimeMs);
+        if(mMinShownTimeMs > 0) {
+            mHandler.postDelayed(minShowingTimeTimeout, mMinShownTimeMs);
+        }
         super.show();
     }
 
     @Override
-    public void dismiss() {
+    public synchronized void dismiss() {
         mDismissAlreadyRequested = true;
         if(mMinShowingTimeAchieved) {
             super.dismiss();
@@ -68,22 +70,23 @@ public class MinTimeDialog extends ProgressDialog {
         }
     }
 
-    public void dismissForced(){
+    public synchronized void dismissForced(){
         mHandler.removeCallbacks(minShowingTimeTimeout);
         super.dismiss();
     }
 
-    Runnable minShowingTimeTimeout = new Runnable() {
+    private Runnable minShowingTimeTimeout = new Runnable() {
         @Override
         public void run() {
             mMinShowingTimeAchieved = true;
             if(mDismissAlreadyRequested){
-                MinTimeDialog.super.dismiss();
+                dismissForced();
             }
         }
     };
 
 
+    // =========== Static builder methods ===============
 
     public static MinTimeDialog createMinTimeDialog(Context context, String message, int minShownTimeMs){
         MinTimeDialog dialog = new MinTimeDialog(context);
