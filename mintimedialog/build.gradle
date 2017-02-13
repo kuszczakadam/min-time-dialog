@@ -98,11 +98,18 @@ bintray {
     key = properties.getProperty("bintray.apikey")
     configurations = ['archives']
     pkg {
-        repo = "maven"
-        name = "MinTimeDialog"
+        repo = "MinTimeDialog"
+        name = "min-time-dialog"
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = ["Apache-2.0"]
         publish = true
+        version {
+            name = version
+            desc = 'Release to bintray'
+            released  = new Date()
+            vcsTag = '0.0.2'
+            attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
+        }
     }
 }

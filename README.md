@@ -7,7 +7,17 @@ This library offers simple widget `MinTimeDialog` that extends standard `Progres
 
 Download
 ---------
-
+Gradle configuration
+```groovy
+repositories{
+    maven {
+        url "https://dl.bintray.com/kuszczakadam/MinTimeDialog"
+    }
+}
+dependencies {
+    compile 'eu.tesseractsoft.mintimedialog:mintimedialog:0.0.2'
+}
+```
 Sample Usage
 ---------
 
