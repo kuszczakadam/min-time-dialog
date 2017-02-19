@@ -3,6 +3,7 @@ package eu.tesseractsoft.mintimedialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 
 /**
  * Progress Dialog with Minimum Showing Time. It assures that dialog will be shown for
@@ -20,8 +21,22 @@ public class MinTimeDialog extends ProgressDialog {
     public interface MinTimeReachedListener {
         /**
          * Fired when minimum showing time was reached
+         *
+         * @param totalMinShownTime current total minimum showing time up to this point in time
          */
-        void onMinTimeReached();
+        void onMinTimeReached(long totalMinShownTime);
+    }
+
+    /**
+     * Interface for debugging purposes - logging messages
+     */
+    public interface Logger {
+        /**
+         * Should log message
+         *
+         * @param msg message
+         */
+        void log(String msg);
     }
 
     // === Configuration option ===
@@ -30,10 +45,14 @@ public class MinTimeDialog extends ProgressDialog {
     private boolean mAutoDismissAfterMinShownTime;
     private MinTimeReachedListener mMinTimeReachedListener;
 
-    // === Internal flags ===
+    // === Internal fields ===
     private Handler mHandler;
     private boolean mDismissAlreadyRequested;
-    private boolean mMinShowingTimeAchieved;
+    private boolean mMinShowingTimeReached;
+    private long mExtendMinTimeMs;
+    private long mTotalMinShownTime;
+    private boolean mIsShowCalled;
+    private Logger mDebugLogger;
 
 
     /**
@@ -64,7 +83,19 @@ public class MinTimeDialog extends ProgressDialog {
 
         mHandler = new Handler();
         mDismissAlreadyRequested = false;
-        mMinShowingTimeAchieved = false;
+        mMinShowingTimeReached = false;
+        mExtendMinTimeMs = 0;
+        mTotalMinShownTime = 0;
+        mIsShowCalled = false;
+        mDebugLogger = new Logger() {
+            @Override
+            public void log(String msg) {
+                // Empty default logger
+            }
+        };
+        mDebugLogger.log("init() [mMinShownTimeMs=" + mMinShownTimeMs +
+                ", mSilentDismiss=" + mSilentDismiss +
+                ", mAutoDismissAfterMinShownTime=" + mAutoDismissAfterMinShownTime + "]");
     }
 
     /**
@@ -104,30 +135,64 @@ public class MinTimeDialog extends ProgressDialog {
     }
 
     /**
+     * Sets debug logger for the purpose of logging messages
+     *
+     * @param debugLogger logger
+     */
+    public void setDebugLogger(Logger debugLogger) {
+        this.mDebugLogger = debugLogger;
+    }
+
+    /**
+     * Returns information if minimum showing time was already reached
+     *
+     * @return true if dialog was already shown for minimum showing time + all extends
+     */
+    public boolean isMinTimeReached() {
+        return mMinShowingTimeReached;
+    }
+
+    /**
+     * Calling this method twice has no additional effect - second and more calls are ignored
      * {@inheritDoc}
      */
     @Override
     public void show() {
-        if (mMinShownTimeMs > 0) {
-            mHandler.postDelayed(minShowingTimeTimeout, mMinShownTimeMs);
-        } else {
-            // No min showing time
-            mMinShowingTimeAchieved = true;
-            if (mMinTimeReachedListener != null) {
-                mMinTimeReachedListener.onMinTimeReached();
-            }
-            if (mAutoDismissAfterMinShownTime) {
-                // FIX, need to delay a bit otherwise no effect
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        dismissForced();
-                    }
-                }, 50);
+        mDebugLogger.log("show() [already shown=" + mIsShowCalled + "]");
+        if (!mIsShowCalled) {// Prevent for calling multiple times
+            mIsShowCalled = true;
 
+            mDebugLogger.log("[mMinShownTimeMs = " + mMinShownTimeMs +
+                    ", mMinTimeReachedListener is not null? = " + (mMinTimeReachedListener != null) +
+                    ", mAutoDismissAfterMinShownTime=" + mAutoDismissAfterMinShownTime +
+                    ", mSilentDismiss=" + mSilentDismiss + "]");
+            if (mMinShownTimeMs > 0) {
+                mDebugLogger.log("schedule timeout");
+                mTotalMinShownTime = mMinShownTimeMs;
+                mHandler.postDelayed(minShowingTimeTimeout, mMinShownTimeMs);
+            } else {
+                // No min showing time
+                mMinShowingTimeReached = true;
+                // Notify about min time reached straight away
+                if (mMinTimeReachedListener != null) {
+                    mDebugLogger.log("notify MinTimeReachedListener");
+                    mMinTimeReachedListener.onMinTimeReached(mTotalMinShownTime);
+                }
+                // Auto dismiss if requested
+                if (mAutoDismissAfterMinShownTime) {
+                    mDebugLogger.log("dismissing...");
+                    // FIX, need to delay a bit otherwise no effect
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            dismissForced();
+                        }
+                    }, 50);
+
+                }
             }
+            super.show();
         }
-        super.show();
     }
 
     /**
@@ -136,7 +201,9 @@ public class MinTimeDialog extends ProgressDialog {
     @Override
     public synchronized void dismiss() {
         mDismissAlreadyRequested = true;
-        if (mMinShowingTimeAchieved) {
+        mDebugLogger.log("dismiss() [mDismissAlreadyRequested=" + mDismissAlreadyRequested +
+                ", mMinShowingTimeReached=" + mMinShowingTimeReached + "]");
+        if (mMinShowingTimeReached) {
             // Min time already reached, so dismiss now
             super.dismiss();
         }
@@ -148,7 +215,10 @@ public class MinTimeDialog extends ProgressDialog {
     @Override
     public void setOnDismissListener(OnDismissListener listener) {
         if (!mSilentDismiss) {
+            mDebugLogger.log("setting OnDismissListener");
             super.setOnDismissListener(listener);
+        } else {
+            mDebugLogger.log("not setting OnDismissListener - silent dismiss requested");
         }
     }
 
@@ -156,17 +226,66 @@ public class MinTimeDialog extends ProgressDialog {
      * Immediately dismiss the dialog ignoring minimum showing time
      */
     public synchronized void dismissForced() {
+        mDebugLogger.log("forced dismissing");
+        // Cancel scheduler
         mHandler.removeCallbacks(minShowingTimeTimeout);
         super.dismiss();
+    }
+
+    /**
+     * Extends minimum showing time by specified amount. Total minimum showing time become
+     * sum of original time and time specified here. Calling this method multiple time extend
+     * time multiple times - additive
+     *
+     * @param extendTimeMs time in milliseconds, has to be greater than 0 (otherwise ignored)
+     */
+    public synchronized void extendMinShownTimeByMs(int extendTimeMs) {
+        if (extendTimeMs > 0) {
+            mExtendMinTimeMs += extendTimeMs;
+            mTotalMinShownTime += extendTimeMs;
+        }
+        mDebugLogger.log("extendMinShownTimeByMs() new values [mExtendMinTimeMs=" + mExtendMinTimeMs +
+                ", mTotalMinShownTime=" + mTotalMinShownTime + "]");
+    }
+
+    // =========== Private methods ===============
+
+    private synchronized void subtractFromExtendMinTime(long time) {
+        mExtendMinTimeMs -= time;
     }
 
     private Runnable minShowingTimeTimeout = new Runnable() {
         @Override
         public void run() {
-            mMinShowingTimeAchieved = true;
-            if (mMinTimeReachedListener != null) {
-                mMinTimeReachedListener.onMinTimeReached();
+
+            if (mExtendMinTimeMs > 0) {
+                mDebugLogger.log("min showing time was extended by " + mExtendMinTimeMs);
+                // Someone extended minimum showing time, schedule again, and subtract time
+                mHandler.postDelayed(minShowingTimeTimeout, mExtendMinTimeMs);
+                subtractFromExtendMinTime(mExtendMinTimeMs);
+                // do not continue this method
+                return;
             }
+
+            mMinShowingTimeReached = true;
+
+            // Notify about min time reached
+            if (mMinTimeReachedListener != null) {
+                mDebugLogger.log("notify MinTimeReachedListener");
+                mMinTimeReachedListener.onMinTimeReached(mTotalMinShownTime);
+                if (mExtendMinTimeMs > 0) {
+                    mDebugLogger.log("min showing time was extended by " + mExtendMinTimeMs);
+                    // During onMinTimeReached someone extended min time, need schedule again
+                    mMinShowingTimeReached = false;
+                    mHandler.postDelayed(minShowingTimeTimeout, mExtendMinTimeMs);
+                    subtractFromExtendMinTime(mExtendMinTimeMs);
+                    // do not continue this method
+                    return;
+                }
+            }
+            mDebugLogger.log("min time reached [mDismissAlreadyRequested=" + mDismissAlreadyRequested +
+                    ", mMinShowingTimeReached=" + mMinShowingTimeReached +
+                    ", mAutoDismissAfterMinShownTime=" + mAutoDismissAfterMinShownTime + "]");
             if (mDismissAlreadyRequested || mAutoDismissAfterMinShownTime) {
                 // dismiss was requested before min time, so dismiss now
                 // or when auto dismiss set
@@ -190,6 +309,28 @@ public class MinTimeDialog extends ProgressDialog {
         MinTimeDialog dialog = new MinTimeDialog(context);
         dialog.setMessage(message);
         dialog.setMinShownTimeMs(minShownTimeMs);
+        return dialog;
+    }
+
+    /**
+     * Simple builder method to create dialog with just message and minimum showing time.
+     * Logs all internal messages
+     *
+     * @param context        context
+     * @param message        message inside the standard dialog
+     * @param minShownTimeMs minimum showing time
+     * @return instance of MinTimeDialog
+     */
+    public static MinTimeDialog createMinTimeDialogDebug(Context context, String message, int minShownTimeMs) {
+        MinTimeDialog dialog = new MinTimeDialog(context);
+        dialog.setMessage(message);
+        dialog.setMinShownTimeMs(minShownTimeMs);
+        dialog.setDebugLogger(new Logger() {
+            @Override
+            public void log(String msg) {
+                Log.d("MinTimeDialog", msg);
+            }
+        });
         return dialog;
     }
 }

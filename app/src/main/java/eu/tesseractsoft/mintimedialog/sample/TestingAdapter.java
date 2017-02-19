@@ -53,6 +53,12 @@ class TestingAdapter extends RecyclerView.Adapter<TestingAdapter.ViewHolder> {
         void populate(TestingAdapterItemModel item) {
             txtLabel.setText(item.getDescription());
             btnShow.setOnClickListener(item.getOnClickListener());
+            if (item.getStatus() != null && !item.getStatus().isEmpty()) {
+                txtStatus.setVisibility(View.VISIBLE);
+                txtStatus.setText(item.getStatus());
+            } else {
+                txtStatus.setVisibility(View.INVISIBLE);
+            }
             // Set update status listener
             item.setListener(new TestingAdapterItemModel.StatusUpdateListener() {
                 @Override

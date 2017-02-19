@@ -62,7 +62,11 @@ public class TestingActivity extends AppCompatActivity {
         mTestList.add(testSilentDismiss());
         mTestList.add(testSilentDismissForced());
         mTestList.add(testMinTimeReachedListener());
+        mTestList.add(testDismissOnMinTimeReachedListener());
         mTestList.add(test0MinTimeMinTimeReachedListener());
+        mTestList.add(testExtendMinTime());
+        mTestList.add(testExtendMinTimeOnMinTimeReached());
+        mTestList.add(testIsMinTimeReached());
     }
 
     private TestingAdapterItemModel test0MinTimeInstantDismiss() {
@@ -79,7 +83,7 @@ public class TestingActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         final long startTime = System.currentTimeMillis();
 
-                        MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(TestingActivity.this, "Simple processing", 0);
+                        MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(TestingActivity.this, "Simple processing", 0);
                         dialog.show();
                         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
@@ -112,7 +116,7 @@ public class TestingActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         final long startTime = System.currentTimeMillis();
 
-                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(TestingActivity.this, "Simple processing", 0);
+                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(TestingActivity.this, "Simple processing", 0);
                         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialogInterface) {
@@ -150,7 +154,7 @@ public class TestingActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         final long startTime = System.currentTimeMillis();
 
-                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(TestingActivity.this, "Simple processing", 2000);
+                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(TestingActivity.this, "Simple processing", 2000);
                         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialogInterface) {
@@ -189,7 +193,7 @@ public class TestingActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         final long startTime = System.currentTimeMillis();
 
-                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(TestingActivity.this, "Simple processing", 1000);
+                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(TestingActivity.this, "Simple processing", 1000);
                         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialogInterface) {
@@ -227,7 +231,7 @@ public class TestingActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         final long startTime = System.currentTimeMillis();
 
-                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(TestingActivity.this, "Simple processing", 1000);
+                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(TestingActivity.this, "Simple processing", 1000);
                         dialog.setAutoDismissAfterMinShownTime(true);
                         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
@@ -266,7 +270,7 @@ public class TestingActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         final long startTime = System.currentTimeMillis();
 
-                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(TestingActivity.this, "Simple processing", 0);
+                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(TestingActivity.this, "Simple processing", 0);
                         dialog.setAutoDismissAfterMinShownTime(true);
                         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
@@ -306,7 +310,7 @@ public class TestingActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         final long startTime = System.currentTimeMillis();
 
-                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(TestingActivity.this, "Simple processing", 1000);
+                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(TestingActivity.this, "Simple processing", 1000);
                         dialog.setAutoDismissAfterMinShownTime(true);
                         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
@@ -345,7 +349,7 @@ public class TestingActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         final long startTime = System.currentTimeMillis();
 
-                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(TestingActivity.this, "Simple processing", 1000);
+                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(TestingActivity.this, "Simple processing", 1000);
                         dialog.setAutoDismissAfterMinShownTime(true);
                         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
@@ -384,7 +388,7 @@ public class TestingActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         final long startTime = System.currentTimeMillis();
 
-                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(TestingActivity.this, "Simple processing", 1000);
+                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(TestingActivity.this, "Simple processing", 1000);
                         dialog.setAutoDismissAfterMinShownTime(true);
                         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
@@ -423,7 +427,7 @@ public class TestingActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         final long startTime = System.currentTimeMillis();
 
-                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(TestingActivity.this, "Simple processing", 1000);
+                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(TestingActivity.this, "Simple processing", 1000);
                         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialogInterface) {
@@ -460,7 +464,7 @@ public class TestingActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
 
-                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(TestingActivity.this, "Simple processing", 1000);
+                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(TestingActivity.this, "Simple processing", 1000);
                         dialog.setSilentDismiss(true);
                         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
@@ -500,7 +504,7 @@ public class TestingActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
 
-                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(TestingActivity.this, "Simple processing", 1000);
+                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(TestingActivity.this, "Simple processing", 1000);
                         dialog.setSilentDismiss(true);
                         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
@@ -540,10 +544,10 @@ public class TestingActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         final boolean[] ifPassed = {false};
-                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(TestingActivity.this, "Simple processing", 500);
+                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(TestingActivity.this, "Simple processing", 500);
                         dialog.setMinTimeReachedListener(new MinTimeDialog.MinTimeReachedListener() {
                             @Override
-                            public void onMinTimeReached() {
+                            public void onMinTimeReached(long mTotalMinShownTime) {
                                 updateStatus(getString(R.string.txt_pass));
                                 ifPassed[0] = true;
                             }
@@ -552,10 +556,54 @@ public class TestingActivity extends AppCompatActivity {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if(!ifPassed[0]) {
+                                if (!ifPassed[0]) {
                                     updateStatus(getString(R.string.txt_fail));
                                 }
                                 dialog.dismiss();
+                            }
+                        }, 1000);
+                    }
+                };
+            }
+        };
+    }
+
+    private TestingAdapterItemModel testDismissOnMinTimeReachedListener() {
+        return new TestingAdapterItemModel() {
+            @Override
+            public String getDescription() {
+                return "testDismissOnMinTimeReachedListener";
+            }
+
+            @Override
+            public View.OnClickListener getOnClickListener() {
+                return new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final boolean[] ifPassed = {false};
+                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(TestingActivity.this, "Simple processing", 500);
+                        dialog.setMinTimeReachedListener(new MinTimeDialog.MinTimeReachedListener() {
+                            @Override
+                            public void onMinTimeReached(long mTotalMinShownTime) {
+                                dialog.dismiss();
+
+                            }
+                        });
+                        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialogInterface) {
+                                updateStatus(getString(R.string.txt_pass));
+                                ifPassed[0] = true;
+                            }
+                        });
+                        dialog.show();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!ifPassed[0]) {
+                                    updateStatus(getString(R.string.txt_fail));
+                                }
+
                             }
                         }, 1000);
                     }
@@ -577,10 +625,10 @@ public class TestingActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         final boolean[] ifPassed = {false};
-                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(TestingActivity.this, "Simple processing", 0);
+                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(TestingActivity.this, "Simple processing", 0);
                         dialog.setMinTimeReachedListener(new MinTimeDialog.MinTimeReachedListener() {
                             @Override
-                            public void onMinTimeReached() {
+                            public void onMinTimeReached(long mTotalMinShownTime) {
                                 updateStatus(getString(R.string.txt_pass));
                                 ifPassed[0] = true;
                             }
@@ -589,12 +637,128 @@ public class TestingActivity extends AppCompatActivity {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if(!ifPassed[0]) {
+                                if (!ifPassed[0]) {
                                     updateStatus(getString(R.string.txt_fail));
                                 }
                                 dialog.dismiss();
                             }
                         }, 800);
+                    }
+                };
+            }
+        };
+    }
+
+    private TestingAdapterItemModel testExtendMinTime() {
+        return new TestingAdapterItemModel() {
+            @Override
+            public String getDescription() {
+                return "testExtendMinTime";
+            }
+
+            @Override
+            public View.OnClickListener getOnClickListener() {
+                return new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final long startTime = System.currentTimeMillis();
+                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(TestingActivity.this, "Simple processing", 1000);
+                        dialog.setAutoDismissAfterMinShownTime(true);
+                        /*dialog.setMinTimeReachedListener(new MinTimeDialog.MinTimeReachedListener() {
+                            @Override
+                            public void onMinTimeReached() {
+                                updateStatus(getString(R.string.txt_pass));
+                                ifPassed[0] = true;
+                            }
+                        });*/
+                        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialogInterface) {
+                                if (System.currentTimeMillis() - startTime > 2000) {
+                                    updateStatus(getString(R.string.txt_pass));
+                                } else {
+                                    updateStatus(getString(R.string.txt_fail));
+                                }
+                            }
+                        });
+                        dialog.show();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                dialog.extendMinShownTimeByMs(1000);
+                            }
+                        }, 500);
+                    }
+                };
+            }
+        };
+    }
+
+    private TestingAdapterItemModel testExtendMinTimeOnMinTimeReached() {
+        return new TestingAdapterItemModel() {
+            @Override
+            public String getDescription() {
+                return "testExtendMinTimeOnMinTimeReached";
+            }
+
+            @Override
+            public View.OnClickListener getOnClickListener() {
+                return new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final long startTime = System.currentTimeMillis();
+                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(TestingActivity.this, "Simple processing", 1000);
+                        dialog.setAutoDismissAfterMinShownTime(true);
+                        dialog.setMinTimeReachedListener(new MinTimeDialog.MinTimeReachedListener() {
+                            @Override
+                            public void onMinTimeReached(long totalMinShownTime) {
+                                if (totalMinShownTime < 1500) {
+                                    dialog.extendMinShownTimeByMs(1000);
+                                }
+                            }
+                        });
+                        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialogInterface) {
+                                if (System.currentTimeMillis() - startTime > 2000) {
+                                    updateStatus(getString(R.string.txt_pass));
+                                } else {
+                                    updateStatus(getString(R.string.txt_fail));
+                                }
+                            }
+                        });
+                        dialog.show();
+                    }
+                };
+            }
+        };
+    }
+
+    private TestingAdapterItemModel testIsMinTimeReached() {
+        return new TestingAdapterItemModel() {
+            @Override
+            public String getDescription() {
+                return "testIsMinTimeReached";
+            }
+
+            @Override
+            public View.OnClickListener getOnClickListener() {
+                return new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(TestingActivity.this, "Simple processing", 1000);
+                        dialog.show();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(dialog.isMinTimeReached()){
+                                    updateStatus(getString(R.string.txt_pass));
+                                }else{
+                                    updateStatus(getString(R.string.txt_fail));
+                                }
+                                dialog.dismiss();
+                            }
+                        }, 2000);
                     }
                 };
             }

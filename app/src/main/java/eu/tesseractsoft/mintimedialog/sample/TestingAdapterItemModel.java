@@ -23,6 +23,7 @@ abstract class TestingAdapterItemModel {
     }
 
     private StatusUpdateListener mListener;
+    private String mStatus;
 
     /**
      * Setter for status update listener
@@ -53,8 +54,18 @@ abstract class TestingAdapterItemModel {
      * @param statusText new status
      */
     void updateStatus(String statusText) {
+        mStatus = statusText;
         if (mListener != null) {
             mListener.onStatusUpdated(statusText);
         }
+    }
+
+    /**
+     * Get current test status
+     *
+     * @return text
+     */
+    public String getStatus() {
+        return mStatus;
     }
 }
