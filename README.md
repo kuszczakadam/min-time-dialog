@@ -65,6 +65,7 @@ Advanced notes
 Some more advanced topics and notes
 
 1. Extending minimum showing time
+
     Extending minimum showing time is additive. It means that calling `extendMinShownTimeByMs()` multiple times
     will add more minimum showing time. Below code will result in dialog being shown for 4 seconds
     ```java
@@ -81,6 +82,7 @@ Some more advanced topics and notes
     will NOT extend time (int other words, `extendMinShownTimeByMs()` method does NOT schedule again timer).
 
 2. Extending min shown time before it was reached
+
     The code below shows how to extend minimum showing time before initial timeout was reached
     ```java
         final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(this, "Initial 2s...", 2000);
@@ -95,6 +97,7 @@ Some more advanced topics and notes
         }, 1000);
     ```
 3. Extending min shown time once it was reached
+
     The code below shows how to extend time when min time was reached.
     It is IMPORTANT to check total time otherwise we will be extending min showing time indefinitely
     ```java
@@ -112,6 +115,7 @@ Some more advanced topics and notes
         dialog.show();
     ```
 4. 3-step processing
+
     The code below shows how to setup dialog to notify user about 3-step processing.
     It show first message for 1 second, then updates message and extend time by 2 seconds, and
     finally shows last message for 1 second. In total dialog is shown for 4 seconds
