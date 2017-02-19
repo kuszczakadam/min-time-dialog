@@ -77,7 +77,7 @@ public class MinTimeDialog extends ProgressDialog {
     /**
      * Option to automatically dismiss dialog when minimum showing time is reached
      *
-     * @param autoDismissAfterMinShownTime true if dialog should be dismissed automatically after minShownTimeMS
+     * @param autoDismissAfterMinShownTime true if dialog should be dismissed automatically after minShownTimeMs
      */
     public void setAutoDismissAfterMinShownTime(boolean autoDismissAfterMinShownTime) {
         this.mAutoDismissAfterMinShownTime = autoDismissAfterMinShownTime;
@@ -90,6 +90,19 @@ public class MinTimeDialog extends ProgressDialog {
     public void show() {
         if (mMinShownTimeMs > 0) {
             mHandler.postDelayed(minShowingTimeTimeout, mMinShownTimeMs);
+        }else{
+            // No min showing time
+            mMinShowingTimeAchieved = true;
+            if (mAutoDismissAfterMinShownTime) {
+                // FIX, need to delay a bit otherwise no effect
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        dismissForced();
+                    }
+                }, 50);
+
+            }
         }
         super.show();
     }
@@ -101,6 +114,7 @@ public class MinTimeDialog extends ProgressDialog {
     public synchronized void dismiss() {
         mDismissAlreadyRequested = true;
         if (mMinShowingTimeAchieved) {
+            // Min time already reached, so dismiss now
             super.dismiss();
         }
     }
@@ -128,6 +142,8 @@ public class MinTimeDialog extends ProgressDialog {
         public void run() {
             mMinShowingTimeAchieved = true;
             if (mDismissAlreadyRequested || mAutoDismissAfterMinShownTime) {
+                // dismiss was requested before min time, so dismiss now
+                // or when auto dismiss set
                 dismissForced();
             }
         }

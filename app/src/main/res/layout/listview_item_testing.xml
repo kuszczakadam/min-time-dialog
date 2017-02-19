@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content">
+
+    <Button
+        android:text="@string/btn_show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnShow"
+        android:layout_marginRight="5dp"/>
+
+    <TextView
+        tools:text="Label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtLabel"
+        android:layout_weight="1"
+        android:layout_marginRight="5dp"/>
+
+    <TextView
+        android:text="@string/txt_fail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtStatus"
+        android:visibility="invisible"/>
+</LinearLayout>

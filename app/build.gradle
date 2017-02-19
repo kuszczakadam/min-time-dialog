@@ -31,4 +31,5 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 
     compile project(':mintimedialog')
+    compile 'com.android.support:recyclerview-v7:25.1.1'
 }
