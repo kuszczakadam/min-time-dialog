@@ -23,7 +23,7 @@ repositories{
     }
 }
 dependencies {
-    compile 'eu.tesseractsoft.mintimedialog:mintimedialog:0.1.0'
+    compile 'eu.tesseractsoft.mintimedialog:mintimedialog:0.1.1'
 }
 ```
 Sample Usage
