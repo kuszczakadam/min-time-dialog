@@ -57,20 +57,20 @@ Advanced notes
 Some more advanced topics and notes
 
 1. Extending minimum showing time
-Extending minimum showing time is additive. It means that calling `extendMinShownTimeByMs()` multiple times
-will add more minimum showing time. Below code will result in dialog being shown for 4 seconds
-```java
-    final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(this, "Initial 2s...", 2000);
-    dialog.setAutoDismissAfterMinShownTime(true);
-    dialog.show();
-    dialog.extendMinShownTimeByMs(1000);
-    dialog.extendMinShownTimeByMs(1000);
-```
-Extending by negative number has no effect (`extendMinShownTimeByMs(-1000)`).
-The `extendMinShownTimeByMs()` method can be called before or after `show()` as well as inside
-`MinTimeReachedListener`. Calling after `dismiss()` but before min time was reached will also result
-int extending time. However, calling after min time was reached (and not inside `MinTimeReachedListener`)
-will NOT extend time (int other words, `extendMinShownTimeByMs()` method does NOT schedule again timer).
+    Extending minimum showing time is additive. It means that calling `extendMinShownTimeByMs()` multiple times
+    will add more minimum showing time. Below code will result in dialog being shown for 4 seconds
+    ```java
+        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(this, "Initial 2s...", 2000);
+        dialog.setAutoDismissAfterMinShownTime(true);
+        dialog.show();
+        dialog.extendMinShownTimeByMs(1000);
+        dialog.extendMinShownTimeByMs(1000);
+    ```
+    Extending by negative number has no effect (`extendMinShownTimeByMs(-1000)`).
+    The `extendMinShownTimeByMs()` method can be called before or after `show()` as well as inside
+    `MinTimeReachedListener`. Calling after `dismiss()` but before min time was reached will also result
+    int extending time. However, calling after min time was reached (and not inside `MinTimeReachedListener`)
+    will NOT extend time (int other words, `extendMinShownTimeByMs()` method does NOT schedule again timer).
 
 2. Extending min shown time before it was reached
 The code below shows how to extend minimum showing time before initial timeout was reached
