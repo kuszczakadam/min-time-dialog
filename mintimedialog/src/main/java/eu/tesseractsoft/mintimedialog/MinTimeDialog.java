@@ -14,10 +14,21 @@ import android.os.Handler;
 
 public class MinTimeDialog extends ProgressDialog {
 
+    /**
+     * Interface to notify about minimum time reached
+     */
+    public interface MinTimeReachedListener {
+        /**
+         * Fired when minimum showing time was reached
+         */
+        void onMinTimeReached();
+    }
+
     // === Configuration option ===
     private int mMinShownTimeMs;
     private boolean mSilentDismiss;
     private boolean mAutoDismissAfterMinShownTime;
+    private MinTimeReachedListener mMinTimeReachedListener;
 
     // === Internal flags ===
     private Handler mHandler;
@@ -57,7 +68,7 @@ public class MinTimeDialog extends ProgressDialog {
     }
 
     /**
-     * Setter for specifying minimum showing time
+     * Setter for specifying minimum showing time. Has to be set before {@link #show()}
      *
      * @param minShownTimeMs minimum showing time in milliseconds, default 0
      */
@@ -84,15 +95,27 @@ public class MinTimeDialog extends ProgressDialog {
     }
 
     /**
+     * Setter to provide minimum showing time reached listener. It is called before {@link #dismiss()}
+     *
+     * @param minTimeReachedListener listener
+     */
+    public void setMinTimeReachedListener(MinTimeReachedListener minTimeReachedListener) {
+        this.mMinTimeReachedListener = minTimeReachedListener;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
     public void show() {
         if (mMinShownTimeMs > 0) {
             mHandler.postDelayed(minShowingTimeTimeout, mMinShownTimeMs);
-        }else{
+        } else {
             // No min showing time
             mMinShowingTimeAchieved = true;
+            if (mMinTimeReachedListener != null) {
+                mMinTimeReachedListener.onMinTimeReached();
+            }
             if (mAutoDismissAfterMinShownTime) {
                 // FIX, need to delay a bit otherwise no effect
                 mHandler.postDelayed(new Runnable() {
@@ -141,6 +164,9 @@ public class MinTimeDialog extends ProgressDialog {
         @Override
         public void run() {
             mMinShowingTimeAchieved = true;
+            if (mMinTimeReachedListener != null) {
+                mMinTimeReachedListener.onMinTimeReached();
+            }
             if (mDismissAlreadyRequested || mAutoDismissAfterMinShownTime) {
                 // dismiss was requested before min time, so dismiss now
                 // or when auto dismiss set

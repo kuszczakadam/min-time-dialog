@@ -61,6 +61,8 @@ public class TestingActivity extends AppCompatActivity {
         mTestList.add(testDismissForcedAfterMinTime());
         mTestList.add(testSilentDismiss());
         mTestList.add(testSilentDismissForced());
+        mTestList.add(testMinTimeReachedListener());
+        mTestList.add(test0MinTimeMinTimeReachedListener());
     }
 
     private TestingAdapterItemModel test0MinTimeInstantDismiss() {
@@ -519,6 +521,80 @@ public class TestingActivity extends AppCompatActivity {
                                 dialog.dismissForced();
                             }
                         }, 100);
+                    }
+                };
+            }
+        };
+    }
+
+    private TestingAdapterItemModel testMinTimeReachedListener() {
+        return new TestingAdapterItemModel() {
+            @Override
+            public String getDescription() {
+                return "testMinTimeReachedListener";
+            }
+
+            @Override
+            public View.OnClickListener getOnClickListener() {
+                return new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final boolean[] ifPassed = {false};
+                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(TestingActivity.this, "Simple processing", 500);
+                        dialog.setMinTimeReachedListener(new MinTimeDialog.MinTimeReachedListener() {
+                            @Override
+                            public void onMinTimeReached() {
+                                updateStatus(getString(R.string.txt_pass));
+                                ifPassed[0] = true;
+                            }
+                        });
+                        dialog.show();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(!ifPassed[0]) {
+                                    updateStatus(getString(R.string.txt_fail));
+                                }
+                                dialog.dismiss();
+                            }
+                        }, 1000);
+                    }
+                };
+            }
+        };
+    }
+
+    private TestingAdapterItemModel test0MinTimeMinTimeReachedListener() {
+        return new TestingAdapterItemModel() {
+            @Override
+            public String getDescription() {
+                return "test0MinTimeMinTimeReachedListener";
+            }
+
+            @Override
+            public View.OnClickListener getOnClickListener() {
+                return new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final boolean[] ifPassed = {false};
+                        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(TestingActivity.this, "Simple processing", 0);
+                        dialog.setMinTimeReachedListener(new MinTimeDialog.MinTimeReachedListener() {
+                            @Override
+                            public void onMinTimeReached() {
+                                updateStatus(getString(R.string.txt_pass));
+                                ifPassed[0] = true;
+                            }
+                        });
+                        dialog.show();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(!ifPassed[0]) {
+                                    updateStatus(getString(R.string.txt_fail));
+                                }
+                                dialog.dismiss();
+                            }
+                        }, 800);
                     }
                 };
             }
