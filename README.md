@@ -1,16 +1,16 @@
 # min-time-dialog
 Progress dialog that stays on the screen for specified minimum amount of time.
 Developer can specify minimum showing time in milliseconds as well as couple other useful options.
-All styling is available via standard `ProgressDialog` interface.
+All stylings are available via standard `ProgressDialog` interface.
 
 This library offers simple widget `MinTimeDialog` that extends standard `ProgressDialog` but offers some additional features:
 * You can set up minimum showing time. Even if dialog is dismissed it will stay on screen for that time and dismiss
 listener will be fired after specified amount of time.
 * Silent dismiss, dismissing dialog without firing dismiss listener
 * Force dismiss, ignoring minimum time specified
-* Auto dismiss when minimum showing time was reached
-* Callback when minimum showing time was reached
-* Possibility to extend minimum showing time while dialog is in progress
+* Auto dismiss when minimum showing time is reached
+* Callback when minimum showing time is reached
+* Possibility to extend minimum showing time while dialog is in progress (update UI via eg `setMessage()`)
 * Debug logger interface
 
 Download
@@ -23,7 +23,7 @@ repositories{
     }
 }
 dependencies {
-    compile 'eu.tesseractsoft.mintimedialog:mintimedialog:0.0.2'
+    compile 'eu.tesseractsoft.mintimedialog:mintimedialog:0.1.0'
 }
 ```
 Sample Usage
@@ -65,6 +65,7 @@ Advanced notes
 Some more advanced topics and notes
 
 1. Extending minimum showing time
+
     Extending minimum showing time is additive. It means that calling `extendMinShownTimeByMs()` multiple times
     will add more minimum showing time. Below code will result in dialog being shown for 4 seconds
     ```java
@@ -77,10 +78,11 @@ Some more advanced topics and notes
     Extending by negative number has no effect (`extendMinShownTimeByMs(-1000)`).
     The `extendMinShownTimeByMs()` method can be called before or after `show()` as well as inside
     `MinTimeReachedListener`. Calling after `dismiss()` but before min time was reached will also result
-    int extending time. However, calling after min time was reached (and not inside `MinTimeReachedListener`)
-    will NOT extend time (int other words, `extendMinShownTimeByMs()` method does NOT schedule again timer).
+    in extending time. However, calling after min time was reached (and not inside `MinTimeReachedListener`)
+    will NOT extend time (in other words, `extendMinShownTimeByMs()` method does NOT schedule timer again).
 
 2. Extending min shown time before it was reached
+
     The code below shows how to extend minimum showing time before initial timeout was reached
     ```java
         final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(this, "Initial 2s...", 2000);
@@ -95,6 +97,7 @@ Some more advanced topics and notes
         }, 1000);
     ```
 3. Extending min shown time once it was reached
+
     The code below shows how to extend time when min time was reached.
     It is IMPORTANT to check total time otherwise we will be extending min showing time indefinitely
     ```java
@@ -112,9 +115,10 @@ Some more advanced topics and notes
         dialog.show();
     ```
 4. 3-step processing
+
     The code below shows how to setup dialog to notify user about 3-step processing.
-    It show first message for 1 second, then updates message and extend time by 2 seconds, and
-    finally shows last message for 1 second. In total dialog is shown for 4 seconds
+    It shows first message for 1 second, then updates message and extend time by 2 seconds, and
+    finally shows last message for 1 second. In total, dialog is shown for 4 seconds
     ```java
         final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(this, "Connecting...", 1000);
         dialog.setAutoDismissAfterMinShownTime(true);
