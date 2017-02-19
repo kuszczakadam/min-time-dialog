@@ -129,7 +129,14 @@ public class MainActivity extends AppCompatActivity {
         dialog.setSilentDismiss(false);
         dialog.setAutoDismissAfterMinShownTime(false);
         dialog.setMinTimeReachedListener(null);
+        dialog.setDebugLogger(null);
+        dialog.setOnDismissListener(null);
+
+        boolean flag = dialog.isMinTimeReached();
+
         dialog.show();
+        dialog.dismiss();
         dialog.dismissForced();
+        dialog.extendMinShownTimeByMs(0);//in milisec
     }
 }
