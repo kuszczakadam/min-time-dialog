@@ -43,14 +43,14 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnSimpleShow)
     public void simpleShow() {
-        MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(this, "Simple processing", 2000);
+        MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(this, "Simple processing", 2000);
         dialog.show();
         dialog.dismiss();
     }
 
     @OnClick(R.id.btnSimple2Show)
     public void simple2Show() {
-        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(this, "Simple 2 processing", 2000);
+        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(this, "Simple 2 processing", 2000);
         dialog.setMinTimeReachedListener(new MinTimeDialog.MinTimeReachedListener() {
             @Override
             public void onMinTimeReached(long totalMinShownTime) {
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnSimple3Show)
     public void simple3Show() {
-        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(this, "Connecting...", 1000);
+        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(this, "Connecting...", 1000);
         dialog.setAutoDismissAfterMinShownTime(true);
         dialog.setMinTimeReachedListener(new MinTimeDialog.MinTimeReachedListener() {
             @Override
@@ -88,14 +88,14 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnSimple4Show)
     public void simple4Show() {
-        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(this, "Auto dismiss in 2s", 2000);
+        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(this, "Auto dismiss in 2s", 2000);
         dialog.setAutoDismissAfterMinShownTime(true);
         dialog.show();
     }
 
     @OnClick(R.id.btnSimple5Show)
     public void simple5Show() {
-        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(this, "Initial 2s...", 2000);
+        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(this, "Initial 2s...", 2000);
         dialog.setAutoDismissAfterMinShownTime(true);
         dialog.show();
         new Handler().postDelayed(new Runnable() {
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnSimple6Show)
     public void simple6Show() {
-        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialog(this, "Initial 2s...", 2000);
+        final MinTimeDialog dialog = MinTimeDialog.createMinTimeDialogDebug(this, "Initial 2s...", 2000);
         dialog.setAutoDismissAfterMinShownTime(true);
         dialog.setMinTimeReachedListener(new MinTimeDialog.MinTimeReachedListener() {
             @Override

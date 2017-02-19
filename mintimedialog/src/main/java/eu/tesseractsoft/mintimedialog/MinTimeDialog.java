@@ -235,12 +235,12 @@ public class MinTimeDialog extends ProgressDialog {
     /**
      * Extends minimum showing time by specified amount. Total minimum showing time become
      * sum of original time and time specified here. Calling this method multiple time extend
-     * time multiple times - additive
+     * time multiple times - additive. Calling this method before {@link #show()} has no effect
      *
      * @param extendTimeMs time in milliseconds, has to be greater than 0 (otherwise ignored)
      */
     public synchronized void extendMinShownTimeByMs(int extendTimeMs) {
-        if (extendTimeMs > 0) {
+        if (mIsShowCalled && extendTimeMs > 0) {
             mExtendMinTimeMs += extendTimeMs;
             mTotalMinShownTime += extendTimeMs;
         }

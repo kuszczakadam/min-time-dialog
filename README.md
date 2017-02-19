@@ -80,6 +80,7 @@ Some more advanced topics and notes
     `MinTimeReachedListener`. Calling after `dismiss()` but before min time was reached will also result
     in extending time. However, calling after min time was reached (and not inside `MinTimeReachedListener`)
     will NOT extend time (in other words, `extendMinShownTimeByMs()` method does NOT schedule timer again).
+    Calling `extendMinShownTimeByMs()` method before `show()` method has no effect
 
 2. Extending min shown time before it was reached
 
