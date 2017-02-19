@@ -3,7 +3,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
 // This is the library version used when deploying the artifact
-version = "0.0.2"
+version = "0.1.0"
 
 android {
     compileSdkVersion 25
@@ -12,7 +12,7 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 1
+        versionCode 100
         versionName version
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -113,7 +113,7 @@ bintray {
             name = version
             desc = 'Release to bintray'
             released  = new Date()
-            vcsTag = '0.0.2'
+            vcsTag = version
             attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
         }
     }
